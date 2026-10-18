@@ -12,8 +12,10 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// MongoDB connection
-mongoose.connect('mongodb://localhost:27017/blogDB')
+// MongoDB Atlas connection
+mongoose.connect(
+    process.env.MONGO_URI || 'mongodb://localhost:27017/blogDB'
+)
     .then(() => console.log('MongoDB connected successfully'))
     .catch((err) => console.error('MongoDB connection failed:', err.message));
 
@@ -114,6 +116,9 @@ app.delete('/api/blogs/:id', verifyAdmin, async (req, res) => {
     }
 });
 
-app.listen(5000, () => {
-    console.log('Server running on port 5000');
+// Use Render's port when deployed
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
